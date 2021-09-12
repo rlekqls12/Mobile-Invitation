@@ -1,6 +1,5 @@
 import React from "react"
 import { hot } from "react-hot-loader/root"
-import styled from "styled-components"
 import { QueryClientProvider } from "react-query"
 import { isDesktop, isMobile } from "react-device-detect"
 import { BrowserRouter, Switch, Route } from "react-router-dom"
@@ -33,29 +32,6 @@ function createImportFunction(pathArr) {
 	)
 }
 
-export const Loading = styled.div`
-	@keyframes show {
-		0% {
-			opacity: 0;
-		}
-		19% {
-			opacity: 0;
-		}
-		20% {
-			opacity: 1;
-		}
-	}
-
-	animation: show 10s linear;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	width: 100vw;
-	height: 100vh;
-	font-size: 24px;
-	opacity: 1;
-`
-
 function DynamicRoutes() {
 	return (
 		<QueryClientProvider client={queryClient}>
@@ -72,7 +48,7 @@ function DynamicRoutes() {
 							})
 
 							return (
-								<React.Suspense fallback={<Loading>Loading..</Loading>}>
+								<React.Suspense fallback={<></>}>
 									<Page
 										history={history}
 										location={location}
