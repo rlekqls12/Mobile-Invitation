@@ -36,3 +36,8 @@ pages/index.js 파일은 http://localhost/index 혹은 http://localhost/ 접속 
 pages/test/abcd.js 파일은 http://localhost/test/abcd 접속 시 보여집니다.
 
 페이지 파일이 없는 경우 404.js 가 표시됩니다.
+
+## 참고 Bootstrap
+
+https://react-bootstrap.github.io/components/input-group/
+https://react-bootstrap.github.io/layout/grid/#col-props
