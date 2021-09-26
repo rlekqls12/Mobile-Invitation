@@ -6,12 +6,13 @@ const Wrapper = styled.div`
 	.mobile_container {
 		width: 100%;
 		height: 100vh;
-		overflow-x: hidden;
+		overflow: hidden;
 	}
 	.desktop_container {
 		width: 770px;
 		height: 100vh;
 		margin: 0 auto;
+		overflow: hidden;
 	}
 `
 
