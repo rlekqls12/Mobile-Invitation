@@ -1,20 +1,31 @@
 import React from "react"
 import styled from "styled-components"
 import { useHistory } from "react-router"
+import BorderLayout from "../../components/Layout/BorderLayout"
 
-const Wrapper = styled.div`
-	display: flex;
-	flex-direction: row;
-	height: 99vh;
-	margin: 0.5vh 5vw;
-	border: 2px solid black;
-	border-radius: 0.2vw;
-`
+// TODO: 글로벌 스크롤 디자인 적용 (얇고 플랫하게)
+
+const Content = styled.div``
 
 export default function Create() {
 	const history = useHistory()
 
-	const createId = history.location.pathname.split("/")[2]
+	const createId = React.useMemo(() => {
+		const pathname = history?.location?.pathname
+		if (pathname && pathname.indexOf("/") !== -1) {
+			const split = pathname.split("/")
 
-	return <Wrapper>Create ID : {createId}</Wrapper>
+			if (split.length === 3) {
+				return split[2]
+			}
+		}
+
+		return undefined
+	}, [history])
+
+	return (
+		<BorderLayout>
+			<Content className="content">Create ID : {createId}</Content>
+		</BorderLayout>
+	)
 }
