@@ -17,22 +17,22 @@ const Wrapper = styled.div`
 
 /**
  * @param {object} props
- * @param {?any} props.children
+ * @param {!number} props.step
+ * @param {?(state) => void} props.onClick
+ * @param {?JSX.Element} props.children
  */
 export default function BorderLayout(props) {
-	const [step, setStep] = React.useState(0)
-
 	return (
 		<Wrapper>
 			<Header
 				title="가족정보"
 				step={{
-					now: step,
+					now: props.step,
 					end: 7,
 				}}
 			/>
 			{props.children}
-			<Footer />
+			<Footer onClick={props.onClick} />
 		</Wrapper>
 	)
 }

@@ -52,8 +52,6 @@ const Wrapper = styled.div`
 export default function Index() {
 	const history = useHistory()
 
-	console.log(uuid)
-
 	const formik = useFormikUI({
 		initialValues: {
 			phone: "",
@@ -63,7 +61,7 @@ export default function Index() {
 			phone: Yup.string().required("전화번호를 입력해주세요."),
 			password: Yup.string().required("비밀번호를 입력해주세요."),
 		}),
-		onSubmit: async (values) => {
+		onSubmit: async () => {
 			history.push("/create/" + uuid(42))
 		},
 	})
