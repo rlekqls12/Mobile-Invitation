@@ -10,7 +10,8 @@ import {
 import styled from "styled-components"
 import { useHistory } from "react-router"
 import * as Yup from "yup"
-import useFormikUI from "../lib/useFormikUI"
+import { yupResolver } from "@hookform/resolvers/yup"
+import { useForm } from "react-hook-form"
 import { convertInputPhone, uuid } from "../lib/helper"
 
 const Wrapper = styled.div`
@@ -52,22 +53,21 @@ const Wrapper = styled.div`
 export default function Index() {
 	const history = useHistory()
 
-	const formik = useFormikUI({
-		initialValues: {
-			phone: "",
-			password: "",
-		},
-		validationSchema: Yup.object({
-			phone: Yup.string().required("전화번호를 입력해주세요."),
-			password: Yup.string().required("비밀번호를 입력해주세요."),
-		}),
-		onSubmit: async () => {
-			history.push("/create/" + uuid(42))
-		},
+	const validateSchema = Yup.object().shape({
+		phone: Yup.string().required("전화번호를 입력해주세요."),
+		password: Yup.string().required("비밀번호를 입력해주세요."),
 	})
 
+	const {
+		register,
+		handleSubmit,
+		getValues,
+		setValue,
+		formState: { errors },
+	} = useForm({ resolver: yupResolver(validateSchema) })
+
 	const validateText = (name) => {
-		const text = formik.touchedError[name]
+		const text = errors[name]?.message
 		return (
 			<div
 				style={{
@@ -85,8 +85,17 @@ export default function Index() {
 	}
 
 	const handleInputPhone = (e) => {
-		convertInputPhone(e, formik.values.phone)
-		formik.field.phone.onChange(e)
+		if (e && e?.target?.value !== undefined) {
+			const convertValue = convertInputPhone(e, getValues("phone"))
+			setValue("phone", convertValue, {
+				shouldValidate: true,
+				shouldDirty: true,
+			})
+		}
+	}
+
+	const onSubmit = () => {
+		history.push("/create/" + uuid(42))
 	}
 
 	return (
@@ -101,8 +110,9 @@ export default function Index() {
 								<FormControl
 									placeholder="010-0000-0000"
 									type="tel"
-									{...formik.field.phone}
+									{...register("phone")}
 									onChange={handleInputPhone}
+									maxLength={13}
 								></FormControl>
 							</InputGroup>
 							{validateText("phone")}
@@ -112,13 +122,13 @@ export default function Index() {
 								<InputGroup.Text>비밀번호</InputGroup.Text>
 								<FormControl
 									type="password"
-									{...formik.field.password}
+									{...register("password")}
 								></FormControl>
 							</InputGroup>
 							{validateText("password")}
 						</Col>
 						<Col xs={10} sm={8} md={6} className="mt-4">
-							<Button className="w-100" onClick={formik.handleSubmit}>
+							<Button className="w-100" onClick={handleSubmit(onSubmit)}>
 								로그인
 							</Button>
 						</Col>
