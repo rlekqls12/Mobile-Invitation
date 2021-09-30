@@ -4,7 +4,7 @@ import cx from "classnames"
 
 const Wrapper = styled.div`
 	display: flex;
-	padding-bottom: 15px;
+	padding-bottom: 50px;
 
 	.header-title {
 		flex: 1;
