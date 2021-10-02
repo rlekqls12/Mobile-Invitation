@@ -20,6 +20,7 @@ const Wrapper = styled.div`
 	align-items: center;
 	height: 100vh;
 	margin: 0 5vw;
+	background-color: white;
 
 	.login-wrapper {
 		display: flex;

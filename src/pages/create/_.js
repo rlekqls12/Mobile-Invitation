@@ -1,23 +1,31 @@
 import React from "react"
-import styled from "styled-components"
 import { useHistory } from "react-router"
 import BorderLayout from "../../components/Layout/BorderLayout"
-import {
-	Col,
-	Container,
-	Dropdown,
-	FormControl,
-	InputGroup,
-	Row,
-} from "react-bootstrap"
+import FamilyInfo from "../../components/create/FamilyInfo"
+import DateInfo from "../../components/create/DateInfo"
+import LocationInfo from "../../components/create/LocationInfo"
+import MultimediaInfo from "../../components/create/MutimediaInfo"
+import GreetingsInfo from "../../components/create/GreetingsInfo"
+import AphorismInfo from "../../components/create/AphorismInfo"
+import PersonalInfo from "../../components/create/PersonalInfo"
+import NoticeInfo from "../../components/create/NoticeInfo"
 
 // TODO: 글로벌 스크롤 디자인 적용 (얇고 플랫하게)
 
-const Content = styled.div``
+const headerList = [
+	"가족정보",
+	"날짜",
+	"위치",
+	"멀티미디어",
+	"인사말",
+	"글귀",
+	"인적사항",
+	"공지사항",
+]
 
 export default function Create() {
 	const history = useHistory()
-	const [step, setStep] = React.useState(0)
+	const [step, setStep] = React.useState(7)
 
 	const createId = React.useMemo(() => {
 		const pathname = history?.location?.pathname
@@ -31,15 +39,19 @@ export default function Create() {
 
 		return undefined
 	}, [history])
+	createId
 
 	const handlePreviousStep = () => {
 		setStep((now) => (now > 0 ? now - 1 : now))
 	}
 
 	const handleNextStep = () => {
-		setStep((now) => (now < 6 ? now + 1 : now))
+		setStep((now) => (now < headerList.length - 1 ? now + 1 : now))
 	}
 
+	/**
+	 * @param {string} state
+	 */
 	const handleClick = (state) => {
 		if (state === "save") {
 		} else if (state === "preview") {
@@ -51,85 +63,20 @@ export default function Create() {
 	}
 
 	return (
-		<BorderLayout step={step} onClick={handleClick}>
-			<Content className="content">
-				<Container>
-					<Row className="mb-5">
-						<Col xs={4} sm={4} md={4}>
-							<h4>신랑측</h4>
-						</Col>
-						<Col xs={8} sm={8} md={8}>
-							<Row className="mb-3">
-								<Col>
-									<InputGroup>
-										<InputGroup.Text>아버님</InputGroup.Text>
-										<FormControl placeholder="홍길동"></FormControl>
-									</InputGroup>
-								</Col>
-								<Col>
-									<InputGroup>
-										<InputGroup.Text>어머님</InputGroup.Text>
-										<FormControl placeholder="홍길동"></FormControl>
-									</InputGroup>
-								</Col>
-							</Row>
-							<Row>
-								<Col>
-									<InputGroup>
-										<InputGroup.Text>신랑</InputGroup.Text>
-										<FormControl placeholder="홍길동"></FormControl>
-									</InputGroup>
-								</Col>
-								<Col>
-									<Dropdown>
-										<Dropdown.Toggle>관계 (선택)</Dropdown.Toggle>
-										<Dropdown.Menu>
-											<Dropdown.Item>장남</Dropdown.Item>
-										</Dropdown.Menu>
-									</Dropdown>
-								</Col>
-							</Row>
-						</Col>
-					</Row>
-					<Row>
-						<Col xs={4} sm={4} md={4}>
-							<h4>신부측</h4>
-						</Col>
-						<Col xs={8} sm={8} md={8}>
-							<Row className="mb-3">
-								<Col>
-									<InputGroup>
-										<InputGroup.Text>아버님</InputGroup.Text>
-										<FormControl placeholder="홍길동"></FormControl>
-									</InputGroup>
-								</Col>
-								<Col>
-									<InputGroup>
-										<InputGroup.Text>어머님</InputGroup.Text>
-										<FormControl placeholder="홍길동"></FormControl>
-									</InputGroup>
-								</Col>
-							</Row>
-							<Row>
-								<Col>
-									<InputGroup>
-										<InputGroup.Text>신부</InputGroup.Text>
-										<FormControl placeholder="홍길동"></FormControl>
-									</InputGroup>
-								</Col>
-								<Col>
-									<Dropdown>
-										<Dropdown.Toggle>관계 (선택)</Dropdown.Toggle>
-										<Dropdown.Menu>
-											<Dropdown.Item>막내</Dropdown.Item>
-										</Dropdown.Menu>
-									</Dropdown>
-								</Col>
-							</Row>
-						</Col>
-					</Row>
-				</Container>
-			</Content>
+		<BorderLayout
+			title={headerList[step]}
+			step={step}
+			lastStep={headerList.length}
+			onClick={handleClick}
+		>
+			<FamilyInfo show={step === 0} />
+			<DateInfo show={step === 1} />
+			<LocationInfo show={step === 2} />
+			<MultimediaInfo show={step === 3} />
+			<GreetingsInfo show={step === 4} />
+			<AphorismInfo show={step === 5} />
+			<PersonalInfo show={step === 6} />
+			<NoticeInfo show={step === 7} />
 		</BorderLayout>
 	)
 }

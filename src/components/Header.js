@@ -6,18 +6,18 @@ const Wrapper = styled.div`
 	display: flex;
 	padding-bottom: 50px;
 
-	.header-title {
+	div.header-title {
 		flex: 1;
-		font-size: 32px;
+		font-size: 26px;
 	}
 
-	.header-step {
+	div.header-step {
 		flex: 2;
 		position: relative;
 		display: flex;
 		justify-content: space-between;
 
-		.header-step--line {
+		div.header-step--line {
 			position: absolute;
 			top: 50%;
 			width: 100%;
@@ -26,17 +26,25 @@ const Wrapper = styled.div`
 			transform: translateY(-50%);
 		}
 
-		.header-step--level {
+		div.header-step--level {
 			position: relative;
 			top: 50%;
-			width: 25px;
-			height: 25px;
+			width: 3.2vw;
+			height: 3.2vw;
+			min-width: 10px;
+			min-height: 10px;
+			max-width: 25px;
+			max-height: 25px;
 			border: 1px solid black;
 			border-radius: 100%;
 			background-color: rgb(238, 238, 238);
 			transform: translateY(-50%);
 
-			&.on {
+			&.pass {
+				background-color: rgb(143, 171, 255);
+			}
+
+			&.now {
 				background-color: rgb(83, 131, 236);
 			}
 		}
@@ -60,7 +68,11 @@ export default function Header(props) {
 				return (
 					<div
 						key={idx}
-						className={cx("header-step--level", idx <= step.now && "on")}
+						className={cx(
+							"header-step--level",
+							idx < step.now && "pass",
+							idx === step.now && "now",
+						)}
 					></div>
 				)
 			})

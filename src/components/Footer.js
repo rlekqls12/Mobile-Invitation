@@ -13,8 +13,9 @@ const Wrapper = styled.div`
 	max-height: 70px;
 	padding: 1.25%;
 	border-top: 2px solid lightgray;
+	background-color: white;
 
-	.left-side {
+	div.left-side {
 		flex: 1;
 
 		button {
@@ -22,7 +23,7 @@ const Wrapper = styled.div`
 			background-color: darkgray;
 		}
 	}
-	.right-side {
+	div.right-side {
 		flex: 1;
 		text-align: end;
 		width: 100%;
