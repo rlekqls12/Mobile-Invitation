@@ -2,7 +2,6 @@ import React from "react"
 import { useHistory } from "react-router"
 import BorderLayout from "../../components/Layout/BorderLayout"
 import FamilyInfo from "../../components/create/FamilyInfo"
-import DateInfo from "../../components/create/DateInfo"
 import LocationInfo from "../../components/create/LocationInfo"
 import MultimediaInfo from "../../components/create/MutimediaInfo"
 import GreetingsInfo from "../../components/create/GreetingsInfo"
@@ -12,20 +11,40 @@ import NoticeInfo from "../../components/create/NoticeInfo"
 
 // TODO: 글로벌 스크롤 디자인 적용 (얇고 플랫하게)
 
-const headerList = [
+const HeaderList = [
 	"가족정보",
-	"날짜",
-	"위치",
+	"예식장",
 	"멀티미디어",
 	"인사말",
 	"글귀",
 	"인적사항",
 	"공지사항",
 ]
+const InfoList = [
+	FamilyInfo,
+	LocationInfo,
+	MultimediaInfo,
+	GreetingsInfo,
+	AphorismInfo,
+	PersonalInfo,
+	NoticeInfo,
+]
+function InfoElement({ step, setData }) {
+	return (
+		<>
+			{InfoList.map((Info, index) =>
+				React.createElement(Info, {
+					setData,
+					key: index,
+					show: index === step,
+				}),
+			)}
+		</>
+	)
+}
 
-export default function Create() {
+function useCreateId() {
 	const history = useHistory()
-	const [step, setStep] = React.useState(7)
 
 	const createId = React.useMemo(() => {
 		const pathname = history?.location?.pathname
@@ -39,14 +58,24 @@ export default function Create() {
 
 		return undefined
 	}, [history])
-	createId
+
+	return createId
+}
+
+export default function Create() {
+	const createId = useCreateId()
+	const [data, setData] = React.useState({})
+	const [step, setStep] = React.useState(0)
+
+	// warning 제거용
+	createId, data
 
 	const handlePreviousStep = () => {
 		setStep((now) => (now > 0 ? now - 1 : now))
 	}
 
 	const handleNextStep = () => {
-		setStep((now) => (now < headerList.length - 1 ? now + 1 : now))
+		setStep((now) => (now < HeaderList.length - 1 ? now + 1 : now))
 	}
 
 	/**
@@ -62,21 +91,18 @@ export default function Create() {
 		}
 	}
 
+	React.useEffect(() => {
+		console.log("data changed :", data)
+	}, [data])
+
 	return (
 		<BorderLayout
-			title={headerList[step]}
+			title={HeaderList}
 			step={step}
-			lastStep={headerList.length}
+			lastStep={HeaderList.length}
 			onClick={handleClick}
 		>
-			<FamilyInfo show={step === 0} />
-			<DateInfo show={step === 1} />
-			<LocationInfo show={step === 2} />
-			<MultimediaInfo show={step === 3} />
-			<GreetingsInfo show={step === 4} />
-			<AphorismInfo show={step === 5} />
-			<PersonalInfo show={step === 6} />
-			<NoticeInfo show={step === 7} />
+			<InfoElement step={step} setData={setData} />
 		</BorderLayout>
 	)
 }

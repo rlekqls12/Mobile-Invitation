@@ -1,5 +1,6 @@
 import React from "react"
 import { Card, Col, Container, Row } from "react-bootstrap"
+import { useForm } from "react-hook-form"
 import styled from "styled-components"
 
 const Wrapper = styled.div`
@@ -17,8 +18,20 @@ const Wrapper = styled.div`
 /**
  * @params {object} params
  * @params {boolean} params.show
+ * @params {object} params.setData
  */
 export default function MultimediaInfo(params) {
+	const { register, getValues } = useForm()
+
+	React.useEffect(() => {
+		if (!params.show) {
+			params.setData((prev) => ({
+				...prev,
+				...getValues(),
+			}))
+		}
+	}, [params.show])
+
 	return (
 		<Wrapper>
 			<Container

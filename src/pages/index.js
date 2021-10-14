@@ -51,13 +51,34 @@ const Wrapper = styled.div`
 	}
 `
 
+/**
+ * @param {object} props
+ * @param {string?} props.text
+ */
+function ValidateText(props) {
+	return (
+		<div
+			style={{
+				width: "100%",
+				maxHeight: props?.text ? "40px" : "0px",
+				textAlign: "right",
+				color: "red",
+				fontSize: "12px",
+				transition: "all 300ms ease-in-out",
+			}}
+		>
+			{props?.text}
+		</div>
+	)
+}
+
+const validateSchema = Yup.object().shape({
+	phone: Yup.string().required("전화번호를 입력해주세요."),
+	password: Yup.string().required("비밀번호를 입력해주세요."),
+})
+
 export default function Index() {
 	const history = useHistory()
-
-	const validateSchema = Yup.object().shape({
-		phone: Yup.string().required("전화번호를 입력해주세요."),
-		password: Yup.string().required("비밀번호를 입력해주세요."),
-	})
 
 	const {
 		register,
@@ -66,24 +87,6 @@ export default function Index() {
 		setValue,
 		formState: { errors },
 	} = useForm({ resolver: yupResolver(validateSchema) })
-
-	const validateText = (name) => {
-		const text = errors[name]?.message
-		return (
-			<div
-				style={{
-					width: "100%",
-					maxHeight: text ? "40px" : "0px",
-					textAlign: "right",
-					color: "red",
-					fontSize: "12px",
-					transition: "all 300ms ease-in-out",
-				}}
-			>
-				{text}
-			</div>
-		)
-	}
 
 	const handleInputPhone = (e) => {
 		if (e && e?.target?.value !== undefined) {
@@ -95,12 +98,16 @@ export default function Index() {
 		}
 	}
 
+	const onKeydownSubmit = (e) => {
+		if (e.code.toLowerCase() === "enter") handleSubmit(onSubmit)()
+	}
+
 	const onSubmit = () => {
 		history.push("/create/" + uuid(42))
 	}
 
 	return (
-		<Wrapper>
+		<Wrapper onKeyDown={onKeydownSubmit}>
 			<div className="login-wrapper">
 				<div className="header-title">모바일 청접장</div>
 				<Container className="input-wrapper">
@@ -114,19 +121,16 @@ export default function Index() {
 									{...register("phone")}
 									onChange={handleInputPhone}
 									maxLength={13}
-								></FormControl>
+								/>
 							</InputGroup>
-							{validateText("phone")}
+							<ValidateText text={errors.phone?.message} />
 						</Col>
 						<Col xs={10} sm={8} md={6} className="mt-2">
 							<InputGroup>
 								<InputGroup.Text>비밀번호</InputGroup.Text>
-								<FormControl
-									type="password"
-									{...register("password")}
-								></FormControl>
+								<FormControl type="password" {...register("password")} />
 							</InputGroup>
-							{validateText("password")}
+							<ValidateText text={errors.password?.message} />
 						</Col>
 						<Col xs={10} sm={8} md={6} className="mt-4">
 							<Button className="w-100" onClick={handleSubmit(onSubmit)}>

@@ -1,6 +1,7 @@
 import React from "react"
 import styled from "styled-components"
 import cx from "classnames"
+import { OverlayTrigger, Tooltip } from "react-bootstrap"
 
 const Wrapper = styled.div`
 	display: flex;
@@ -35,21 +36,107 @@ const Wrapper = styled.div`
 			min-height: 10px;
 			max-width: 25px;
 			max-height: 25px;
+			overflow: hidden;
 			border: 1px solid black;
 			border-radius: 100%;
 			background-color: rgb(238, 238, 238);
 			transform: translateY(-50%);
 
-			&.pass {
+			@keyframes next {
+				from {
+					transform: translateX(-100%);
+					background-color: rgb(238, 238, 238);
+				}
+				to {
+					transform: translateX(0%);
+				}
+			}
+
+			@keyframes gone {
+				from {
+					transform: translateX(0%);
+					background-color: rgb(83, 131, 236);
+				}
+				to {
+					transform: translateX(-100%);
+				}
+			}
+
+			& > div {
+				width: 100%;
+				height: 100%;
+				border-radius: 100%;
+			}
+
+			&:not(.pass):not(.now).gone > div {
+				animation: gone 0.5s ease-out;
+			}
+
+			&.pass > div {
 				background-color: rgb(143, 171, 255);
 			}
 
-			&.now {
+			&.now > div {
+				animation: next 0.5s ease-in;
 				background-color: rgb(83, 131, 236);
 			}
 		}
 	}
 `
+
+const LayoutStep = (props) => {
+	const [prevStep, setPrevStep] = React.useState(-1)
+
+	const LayoutLevels = React.useMemo(() => {
+		const { title, step } = props
+
+		if (step) {
+			console.log(step.now, prevStep)
+			const goNext = step.now > prevStep
+			setPrevStep(step.now)
+			// TODO: 원래는 step 바뀔 때마다 한 번씩 불러와져야하는데, 폼 넘어갈 때마다 setData 되서 이 함수가 두 번씩 불러와짐.
+			// TODO: 애니메이션 효과 아직 미완, 오른쪽 갈때 차오르고, 왼쪽 갈때 빠지기 (왼쪽 갈때 빠지는 게 아직 구현 안 됨)
+
+			return Array.from({ length: step.end }, (_, idx) => (
+				<OverlayTrigger
+					key={idx}
+					placement="bottom"
+					overlay={(props) => (
+						<Tooltip id={idx} {...props}>
+							{title[idx]}
+						</Tooltip>
+					)}
+				>
+					<div
+						className={cx(
+							"header-step--level",
+							idx < step.now && "pass",
+							goNext
+								? idx === step.now - 1 && "prev"
+								: idx === step.now + 1 && "prev",
+							idx === step.now && "now",
+						)}
+					>
+						<div></div>
+					</div>
+				</OverlayTrigger>
+			))
+		}
+
+		return <></>
+	}, [props.step])
+
+	if (props.step) {
+		return (
+			<>
+				<div className="header-step--line"></div>
+				{LayoutLevels}
+			</>
+		)
+	}
+
+	return <></>
+}
 
 /**
  * @param {object} props
@@ -60,44 +147,14 @@ const Wrapper = styled.div`
  * }} props.step
  */
 export default function Header(props) {
-	const LayoutLevels = React.useMemo(() => {
-		const step = props.step
-
-		if (step) {
-			return Array.from({ length: step.end }, () => undefined).map((_, idx) => {
-				return (
-					<div
-						key={idx}
-						className={cx(
-							"header-step--level",
-							idx < step.now && "pass",
-							idx === step.now && "now",
-						)}
-					></div>
-				)
-			})
-		}
-
-		return <></>
-	}, [props.step])
-
-	const LayoutStep = React.useMemo(() => {
-		if (props.step) {
-			return (
-				<>
-					<div className="header-step--line"></div>
-					{LayoutLevels}
-				</>
-			)
-		}
-
-		return <></>
-	}, [props.step])
+	const targetTitle = props.title[props.step.now]
 
 	return (
 		<Wrapper>
-			<div className="header-title">{props.title}</div>
-			<div className="header-step">{LayoutStep}</div>
+			<div className="header-title">{targetTitle}</div>
+			<div className="header-step">
+				<LayoutStep title={props.title} step={props.step} />
+			</div>
 		</Wrapper>
 	)
 }

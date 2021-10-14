@@ -29,7 +29,7 @@ const Wrapper = styled.div`
 
 /**
  * @param {object} props
- * @param {!string} props.title
+ * @param {!string[]} props.title
  * @param {!number} props.step
  * @param {!number} props.lastStep
  * @param {?(state) => void} props.onClick

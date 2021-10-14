@@ -8,6 +8,7 @@ import {
 	InputGroup,
 	Row,
 } from "react-bootstrap"
+import { useForm } from "react-hook-form"
 import styled from "styled-components"
 
 const Wrapper = styled.div`
@@ -22,11 +23,41 @@ const Wrapper = styled.div`
 	}
 `
 
+function useFindAddress() {
+	const [address, setAddress] = React.useState("")
+
+	const addressInputProps = {
+		value: address,
+		onChange: (e) => {
+			if (e?.target?.value) setAddress(e.target.value)
+		},
+	}
+
+	const findAddress = () => {
+		alert("주소 찾기 (" + address + ")")
+	}
+
+	return { addressInputProps, findAddress }
+}
+
 /**
  * @params {object} params
  * @params {boolean} params.show
+ * @params {object} params.setData
  */
 export default function LocationInfo(params) {
+	const { register, getValues } = useForm()
+	const { addressInputProps, findAddress } = useFindAddress()
+
+	React.useEffect(() => {
+		if (!params.show) {
+			params.setData((prev) => ({
+				...prev,
+				...getValues(),
+			}))
+		}
+	}, [params.show])
+
 	return (
 		<Wrapper>
 			<Container
@@ -37,8 +68,18 @@ export default function LocationInfo(params) {
 				<Row className="mb-4">
 					<Col>
 						<InputGroup>
+							<InputGroup.Text>날짜</InputGroup.Text>
+							<FormControl type="date" {...register("date.date")}></FormControl>
+							<InputGroup.Text>시간</InputGroup.Text>
+							<FormControl type="time" {...register("date.time")}></FormControl>
+						</InputGroup>
+					</Col>
+				</Row>
+				<Row className="mb-4">
+					<Col>
+						<InputGroup>
 							<InputGroup.Text>예식장명</InputGroup.Text>
-							<FormControl placeholder="ㅁㅁ 예식장"></FormControl>
+							<FormControl {...register("weddinghall.name")}></FormControl>
 						</InputGroup>
 					</Col>
 				</Row>
@@ -46,7 +87,9 @@ export default function LocationInfo(params) {
 					<Col>
 						<InputGroup>
 							<InputGroup.Text>상세주소</InputGroup.Text>
-							<FormControl placeholder="상세주소"></FormControl>
+							<FormControl
+								{...register("weddinghall.address.detail")}
+							></FormControl>
 						</InputGroup>
 					</Col>
 				</Row>
@@ -54,11 +97,11 @@ export default function LocationInfo(params) {
 					<Col xs={9} sm={10}>
 						<InputGroup>
 							<InputGroup.Text>주소</InputGroup.Text>
-							<FormControl placeholder="주소"></FormControl>
+							<FormControl {...addressInputProps}></FormControl>
 						</InputGroup>
 					</Col>
 					<Col>
-						<Button>검색</Button>
+						<Button onClick={findAddress}>검색</Button>
 					</Col>
 				</Row>
 				<Row className="mb-4">
@@ -82,11 +125,7 @@ export default function LocationInfo(params) {
 					<Col>
 						<InputGroup>
 							<InputGroup.Text>오시는 길</InputGroup.Text>
-							<FormControl
-								as="textarea"
-								placeholder="오시는 길"
-								rows={4}
-							></FormControl>
+							<FormControl as="textarea" rows={4}></FormControl>
 						</InputGroup>
 					</Col>
 				</Row>
