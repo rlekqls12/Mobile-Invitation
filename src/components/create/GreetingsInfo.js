@@ -18,19 +18,18 @@ const Wrapper = styled.div`
 /**
  * @params {object} params
  * @params {boolean} params.show
+ * @params {number} params.saveState
  * @params {object} params.setData
  */
 export default function GreetingsInfo(params) {
 	const { register, getValues } = useForm()
 
 	React.useEffect(() => {
-		if (!params.show) {
-			params.setData((prev) => ({
-				...prev,
-				...getValues(),
-			}))
-		}
-	}, [params.show])
+		params.setData((prev) => ({
+			...prev,
+			...getValues(),
+		}))
+	}, [params.saveState])
 
 	return (
 		<Wrapper>
@@ -46,6 +45,7 @@ export default function GreetingsInfo(params) {
 								as="textarea"
 								placeholder="소개하실 글을 적어주세요!"
 								rows={12}
+								{...register("greetings.text")}
 							></FormControl>
 						</InputGroup>
 					</Col>

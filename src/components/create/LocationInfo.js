@@ -43,20 +43,20 @@ function useFindAddress() {
 /**
  * @params {object} params
  * @params {boolean} params.show
+ * @params {number} params.saveState
  * @params {object} params.setData
  */
 export default function LocationInfo(params) {
+	// TODO: 다음 주소 찾기 API 연결, 지도 API 연결, 파일 업로드 연결
 	const { register, getValues } = useForm()
 	const { addressInputProps, findAddress } = useFindAddress()
 
 	React.useEffect(() => {
-		if (!params.show) {
-			params.setData((prev) => ({
-				...prev,
-				...getValues(),
-			}))
-		}
-	}, [params.show])
+		params.setData((prev) => ({
+			...prev,
+			...getValues(),
+		}))
+	}, [params.saveState])
 
 	return (
 		<Wrapper>
@@ -69,9 +69,15 @@ export default function LocationInfo(params) {
 					<Col>
 						<InputGroup>
 							<InputGroup.Text>날짜</InputGroup.Text>
-							<FormControl type="date" {...register("date.date")}></FormControl>
+							<FormControl
+								type="date"
+								{...register("location.date.date")}
+							></FormControl>
 							<InputGroup.Text>시간</InputGroup.Text>
-							<FormControl type="time" {...register("date.time")}></FormControl>
+							<FormControl
+								type="time"
+								{...register("location.date.time")}
+							></FormControl>
 						</InputGroup>
 					</Col>
 				</Row>
@@ -79,7 +85,9 @@ export default function LocationInfo(params) {
 					<Col>
 						<InputGroup>
 							<InputGroup.Text>예식장명</InputGroup.Text>
-							<FormControl {...register("weddinghall.name")}></FormControl>
+							<FormControl
+								{...register("location.weddinghall.name")}
+							></FormControl>
 						</InputGroup>
 					</Col>
 				</Row>
@@ -88,7 +96,7 @@ export default function LocationInfo(params) {
 						<InputGroup>
 							<InputGroup.Text>상세주소</InputGroup.Text>
 							<FormControl
-								{...register("weddinghall.address.detail")}
+								{...register("location.weddinghall.address.detail")}
 							></FormControl>
 						</InputGroup>
 					</Col>
@@ -125,7 +133,11 @@ export default function LocationInfo(params) {
 					<Col>
 						<InputGroup>
 							<InputGroup.Text>오시는 길</InputGroup.Text>
-							<FormControl as="textarea" rows={4}></FormControl>
+							<FormControl
+								as="textarea"
+								rows={4}
+								{...register("location.wayToCome.text")}
+							></FormControl>
 						</InputGroup>
 					</Col>
 				</Row>

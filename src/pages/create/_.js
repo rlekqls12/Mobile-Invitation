@@ -29,19 +29,6 @@ const InfoList = [
 	PersonalInfo,
 	NoticeInfo,
 ]
-function InfoElement({ step, setData }) {
-	return (
-		<>
-			{InfoList.map((Info, index) =>
-				React.createElement(Info, {
-					setData,
-					key: index,
-					show: index === step,
-				}),
-			)}
-		</>
-	)
-}
 
 function useCreateId() {
 	const history = useHistory()
@@ -65,17 +52,24 @@ function useCreateId() {
 export default function Create() {
 	const createId = useCreateId()
 	const [data, setData] = React.useState({})
+	const [saveState, setSaveState] = React.useState(new Date().getTime())
 	const [step, setStep] = React.useState(0)
 
 	// warning 제거용
-	createId, data
+	React.useEffect(() => {
+		console.log(createId, data)
+	}, [data])
+
+	const handleSaveData = (fn) => {
+		setData(fn)
+	}
 
 	const handlePreviousStep = () => {
-		setStep((now) => (now > 0 ? now - 1 : now))
+		if (step > 0) setStep(step - 1)
 	}
 
 	const handleNextStep = () => {
-		setStep((now) => (now < HeaderList.length - 1 ? now + 1 : now))
+		if (step < HeaderList.length - 1) setStep(step + 1)
 	}
 
 	/**
@@ -83,6 +77,7 @@ export default function Create() {
 	 */
 	const handleClick = (state) => {
 		if (state === "save") {
+			setSaveState(new Date().getTime())
 		} else if (state === "preview") {
 		} else if (state === "previous") {
 			handlePreviousStep()
@@ -91,9 +86,18 @@ export default function Create() {
 		}
 	}
 
-	React.useEffect(() => {
-		console.log("data changed :", data)
-	}, [data])
+	const InfoElement = React.useMemo(
+		() =>
+			InfoList.map((Info, index) =>
+				React.createElement(Info, {
+					saveState,
+					key: index,
+					show: index === step,
+					setData: handleSaveData,
+				}),
+			),
+		[step, saveState],
+	)
 
 	return (
 		<BorderLayout
@@ -102,7 +106,7 @@ export default function Create() {
 			lastStep={HeaderList.length}
 			onClick={handleClick}
 		>
-			<InfoElement step={step} setData={setData} />
+			{InfoElement}
 		</BorderLayout>
 	)
 }

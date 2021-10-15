@@ -42,7 +42,26 @@ const Wrapper = styled.div`
 			background-color: rgb(238, 238, 238);
 			transform: translateY(-50%);
 
-			@keyframes next {
+			@keyframes nowToPassBackground {
+				from {
+					background-color: rgb(143, 171, 255);
+				}
+				to {
+					background-color: rgb(143, 171, 255);
+				}
+			}
+
+			@keyframes nowToPass {
+				from {
+					transform: translateX(-0%);
+					background-color: rgb(83, 131, 236);
+				}
+				to {
+					transform: translateX(100%);
+				}
+			}
+
+			@keyframes emptyToNow {
 				from {
 					transform: translateX(-100%);
 					background-color: rgb(238, 238, 238);
@@ -52,7 +71,25 @@ const Wrapper = styled.div`
 				}
 			}
 
-			@keyframes gone {
+			@keyframes passToNowBackground {
+				from {
+					background-color: rgb(143, 171, 255);
+				}
+				to {
+					background-color: rgb(143, 171, 255);
+				}
+			}
+
+			@keyframes passToNow {
+				from {
+					transform: translateX(100%);
+				}
+				to {
+					transform: translateX(0%);
+				}
+			}
+
+			@keyframes nowToPrev {
 				from {
 					transform: translateX(0%);
 					background-color: rgb(83, 131, 236);
@@ -68,17 +105,36 @@ const Wrapper = styled.div`
 				border-radius: 100%;
 			}
 
-			&:not(.pass):not(.now).gone > div {
-				animation: gone 0.5s ease-out;
-			}
-
 			&.pass > div {
 				background-color: rgb(143, 171, 255);
 			}
 
+			&.pass.prev {
+				animation: nowToPassBackground 0.5s ease-in;
+			}
+
+			&.pass.prev > div {
+				animation: nowToPass 0.5s ease-in;
+			}
+
 			&.now > div {
-				animation: next 0.5s ease-in;
 				background-color: rgb(83, 131, 236);
+			}
+
+			&.now.back {
+				animation: passToNowBackground 0.75s ease-out;
+			}
+
+			&.now.back > div {
+				animation: passToNow 0.75s ease-out;
+			}
+
+			&.now:not(.back) > div {
+				animation: emptyToNow 0.75s ease-in;
+			}
+
+			&.now + .prev > div {
+				animation: nowToPrev 0.5s ease-out;
 			}
 		}
 	}
@@ -91,11 +147,7 @@ const LayoutStep = (props) => {
 		const { title, step } = props
 
 		if (step) {
-			console.log(step.now, prevStep)
-			const goNext = step.now > prevStep
 			setPrevStep(step.now)
-			// TODO: 원래는 step 바뀔 때마다 한 번씩 불러와져야하는데, 폼 넘어갈 때마다 setData 되서 이 함수가 두 번씩 불러와짐.
-			// TODO: 애니메이션 효과 아직 미완, 오른쪽 갈때 차오르고, 왼쪽 갈때 빠지기 (왼쪽 갈때 빠지는 게 아직 구현 안 됨)
 
 			return Array.from({ length: step.end }, (_, idx) => (
 				<OverlayTrigger
@@ -111,9 +163,9 @@ const LayoutStep = (props) => {
 						className={cx(
 							"header-step--level",
 							idx < step.now && "pass",
-							goNext
-								? idx === step.now - 1 && "prev"
-								: idx === step.now + 1 && "prev",
+							step.now > prevStep && idx === step.now - 1 && "prev",
+							step.now < prevStep && idx === step.now + 1 && "prev",
+							step.now < prevStep && idx === step.now && "back",
 							idx === step.now && "now",
 						)}
 					>

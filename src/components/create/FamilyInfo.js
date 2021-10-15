@@ -15,19 +15,18 @@ const Wrapper = styled.div``
 /**
  * @params {object} params
  * @params {boolean} params.show
+ * @params {number} params.saveState
  * @params {object} params.setData
  */
 export default function FamilyInfo(params) {
 	const { register, getValues } = useForm()
 
 	React.useEffect(() => {
-		if (!params.show) {
-			params.setData((prev) => ({
-				...prev,
-				...getValues(),
-			}))
-		}
-	}, [params.show])
+		params.setData((prev) => ({
+			...prev,
+			...getValues(),
+		}))
+	}, [params.saveState])
 
 	return (
 		<Wrapper>
@@ -37,21 +36,21 @@ export default function FamilyInfo(params) {
 				}}
 			>
 				<Row className="mb-5">
-					<Col xs={4}>
+					<Col sm={3}>
 						<h4>신랑측</h4>
 					</Col>
-					<Col xs={8}>
+					<Col sm={9}>
 						<Row className="mb-1">
 							<Col>
 								<InputGroup>
 									<InputGroup.Text>아버님</InputGroup.Text>
-									<FormControl {...register("man.father.name")} />
+									<FormControl {...register("family.man.father.name")} />
 								</InputGroup>
 							</Col>
 							<Col>
 								<InputGroup>
 									<InputGroup.Text>어머님</InputGroup.Text>
-									<FormControl {...register("man.mother.name")} />
+									<FormControl {...register("family.man.mother.name")} />
 								</InputGroup>
 							</Col>
 						</Row>
@@ -60,11 +59,11 @@ export default function FamilyInfo(params) {
 								<InputGroup
 									size="sm"
 									className="justify-content-end"
-									ref={register("man.father.notExist").ref}
+									ref={register("family.man.father.notExist").ref}
 								>
 									<InputGroup.Text>부재</InputGroup.Text>
 									<InputGroup.Checkbox
-										{...register("man.father.notExist")}
+										{...register("family.man.father.notExist")}
 										ref={null}
 									/>
 								</InputGroup>
@@ -73,11 +72,11 @@ export default function FamilyInfo(params) {
 								<InputGroup
 									size="sm"
 									className="justify-content-end"
-									ref={register("man.mother.notExist").ref}
+									ref={register("family.man.mother.notExist").ref}
 								>
 									<InputGroup.Text>부재</InputGroup.Text>
 									<InputGroup.Checkbox
-										{...register("man.mother.notExist")}
+										{...register("family.man.mother.notExist")}
 										ref={null}
 									/>
 								</InputGroup>
@@ -87,13 +86,13 @@ export default function FamilyInfo(params) {
 							<Col>
 								<InputGroup>
 									<InputGroup.Text>신랑</InputGroup.Text>
-									<FormControl {...register("man.name")} />
+									<FormControl {...register("family.man.name")} />
 								</InputGroup>
 							</Col>
 							<Col>
 								<InputGroup>
 									<InputGroup.Text>관계</InputGroup.Text>
-									<Form.Select {...register("man.type")}>
+									<Form.Select {...register("family.man.type")}>
 										<option value="son">아들</option>
 										<option value="1st">장남</option>
 										<option value="2nd">차남</option>
@@ -113,21 +112,21 @@ export default function FamilyInfo(params) {
 					</Col>
 				</Row>
 				<Row>
-					<Col xs={4}>
+					<Col sm={3}>
 						<h4>신부측</h4>
 					</Col>
-					<Col xs={8}>
+					<Col sm={9}>
 						<Row className="mb-1">
 							<Col>
 								<InputGroup>
 									<InputGroup.Text>아버님</InputGroup.Text>
-									<FormControl {...register("woman.father.name")} />
+									<FormControl {...register("family.woman.father.name")} />
 								</InputGroup>
 							</Col>
 							<Col>
 								<InputGroup>
 									<InputGroup.Text>어머님</InputGroup.Text>
-									<FormControl {...register("woman.mother.name")} />
+									<FormControl {...register("family.woman.mother.name")} />
 								</InputGroup>
 							</Col>
 						</Row>
@@ -136,11 +135,11 @@ export default function FamilyInfo(params) {
 								<InputGroup
 									size="sm"
 									className="justify-content-end"
-									ref={register("woman.father.notExist").ref}
+									ref={register("family.woman.father.notExist").ref}
 								>
 									<InputGroup.Text>부재</InputGroup.Text>
 									<InputGroup.Checkbox
-										{...register("woman.father.notExist")}
+										{...register("family.woman.father.notExist")}
 										ref={null}
 									/>
 								</InputGroup>
@@ -149,11 +148,11 @@ export default function FamilyInfo(params) {
 								<InputGroup
 									size="sm"
 									className="justify-content-end"
-									ref={register("woman.mother.notExist").ref}
+									ref={register("family.woman.mother.notExist").ref}
 								>
 									<InputGroup.Text>부재</InputGroup.Text>
 									<InputGroup.Checkbox
-										{...register("woman.mother.notExist")}
+										{...register("family.woman.mother.notExist")}
 										ref={null}
 									/>
 								</InputGroup>
@@ -163,13 +162,13 @@ export default function FamilyInfo(params) {
 							<Col>
 								<InputGroup>
 									<InputGroup.Text>신부</InputGroup.Text>
-									<FormControl {...register("woman.name")} />
+									<FormControl {...register("family.woman.name")} />
 								</InputGroup>
 							</Col>
 							<Col>
 								<InputGroup>
 									<InputGroup.Text>관계</InputGroup.Text>
-									<Form.Select {...register("woman.type")}>
+									<Form.Select {...register("family.woman.type")}>
 										<option value="daughter">딸</option>
 										<option value="1st">장녀</option>
 										<option value="2nd">차녀</option>

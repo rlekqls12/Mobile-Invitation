@@ -56,7 +56,7 @@ export default function Footer(props) {
 	return (
 		<Wrapper>
 			<div className="left-side">
-				<Button name="save" onClick={handleClick} disabled>
+				<Button name="save" onClick={handleClick}>
 					저장
 				</Button>
 				<Button name="preview" onClick={handleClick} disabled>

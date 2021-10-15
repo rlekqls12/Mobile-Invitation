@@ -18,19 +18,18 @@ const Wrapper = styled.div`
 /**
  * @params {object} params
  * @params {boolean} params.show
+ * @params {number} params.saveState
  * @params {object} params.setData
  */
 export default function MultimediaInfo(params) {
 	const { register, getValues } = useForm()
 
 	React.useEffect(() => {
-		if (!params.show) {
-			params.setData((prev) => ({
-				...prev,
-				...getValues(),
-			}))
-		}
-	}, [params.show])
+		params.setData((prev) => ({
+			...prev,
+			...getValues(),
+		}))
+	}, [params.saveState])
 
 	return (
 		<Wrapper>

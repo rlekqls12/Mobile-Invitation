@@ -26,19 +26,18 @@ const Wrapper = styled.div`
 /**
  * @params {object} params
  * @params {boolean} params.show
+ * @params {number} params.saveState
  * @params {object} params.setData
  */
 export default function AphorismInfo(params) {
 	const { register, getValues } = useForm()
 
 	React.useEffect(() => {
-		if (!params.show) {
-			params.setData((prev) => ({
-				...prev,
-				...getValues(),
-			}))
-		}
-	}, [params.show])
+		params.setData((prev) => ({
+			...prev,
+			...getValues(),
+		}))
+	}, [params.saveState])
 
 	return (
 		<Wrapper>
@@ -54,6 +53,7 @@ export default function AphorismInfo(params) {
 								as="textarea"
 								placeholder="150자 이내로 작성해주세요 ^^"
 								rows={12}
+								{...register("aphorism.text")}
 							></FormControl>
 						</InputGroup>
 					</Col>
